@@ -39,7 +39,14 @@ orPC' f:fs x:xs = firstJust ((f x):(orPC' fs xs))
 notPC f Nothing = Just undefined
 notPC f Just _  = Nothing
 
+untilPC f [] = Nothing
+untilPC f b:bs 
+	| f b == Nothing = Nothing
+	| otherwise = untilPC f bs
+
 manyPC n f  = andPC' (replicate n f) 
+
+between f g h bs = (andPC' [f,g,h] bs) !! 1 
 
 checkMaybe = foldr1 f -- se nella lista ci sono solo dei Just porta fuori il Just altrimenti restituisce nothing
 	where f :: Maybe [a] -> Maybe a -> Maybe [a]
